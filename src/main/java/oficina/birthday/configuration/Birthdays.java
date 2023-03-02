@@ -2,7 +2,6 @@ package oficina.birthday.configuration;
 
 import oficina.birthday.Birthday;
 import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,11 +41,13 @@ public class Birthdays {
         }
     }
 
-    public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day) {
+    public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day) throws InvalidConfigurationException {
         if (!months().contains(month.toLowerCase())) throw new IllegalArgumentException("Invalid month input");
         if (!dayExists(day, month.toLowerCase())) throw new IllegalArgumentException("Invalid day input");
 
         ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        if (section == null) throw new InvalidConfigurationException("Path 'birthdays' is null");
     }
 
     public boolean removeBirthday(String key) {

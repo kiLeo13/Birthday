@@ -7,6 +7,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,7 @@ public class AddBirthday implements TabExecutor {
             return true;
         }
 
-        String key = args[0];
+        String key = args[0].toLowerCase();
         String realName = args[1];
         BarColor barColor = BarColor.valueOf(args[2]);
         String month = args[3];
@@ -58,7 +59,12 @@ public class AddBirthday implements TabExecutor {
             return true;
         }
 
-        Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+        try {
+            Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+            player.sendRichMessage("<gray>[<light_purple>" + key + "</light_purple>]</gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
+        } catch (InvalidConfigurationException e) {
+            player.sendRichMessage("<red>Something went wrong, see console for errors.");
+        }
 
         return true;
     }
@@ -132,6 +138,7 @@ public class AddBirthday implements TabExecutor {
     }
 
     private boolean hasOnlyLetters(String arg) {
+        arg = arg.toLowerCase();
         String[] array = arg.split("");
         List<Character> letters = new ArrayList<>();
 
