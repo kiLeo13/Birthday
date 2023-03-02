@@ -2,12 +2,13 @@
 # Keys and their meanings:
 
 # Name: The name to be sent in the chat, if none is provided we'll use the section name instead.
+# Barcolor: The color of the bossbar at the top of the screen.
+# - Reference: https://jd.papermc.io/paper/1.19/org/bukkit/boss/BossBar.html
 # Month: The month of the birthday (using their names, e.g: January, July).
 # Day: The day of the birthday.
-# WTA stands for "When to Announce" in hours (24h format):
 birthdays:
   kaiiip:
     name: "Kaisa"
+    barcolor: PINK
     month: february
     day: 30
-    wta: 00
