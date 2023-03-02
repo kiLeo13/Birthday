@@ -1,0 +1,13 @@
+# Here you can setup all birthdays date and related stuff.
+# Keys and their meanings:
+
+# Name: The name to be sent in the chat, if none is provided we'll use the section name instead.
+# Month: The month of the birthday (using their names, e.g: January, July).
+# Day: The day of the birthday.
+# WTA stands for "When to Announce" in hours (24h format):
+birthdays:
+  kaiiip:
+    name: "Kaisa"
+    month: february
+    day: 30
+    wta: 00
