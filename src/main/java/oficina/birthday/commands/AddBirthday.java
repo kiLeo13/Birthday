@@ -41,12 +41,12 @@ public class AddBirthday implements TabExecutor {
             return true;
         }
 
-        if (Birthdays.getInstance().months().contains(args[3])) {
+        if (!Birthdays.getInstance().months().contains(args[3])) {
             player.sendRichMessage("<red>Month input invalid. Please write the name of a month, don't use numbers.");
             return true;
         }
 
-        String key = args[0].toLowerCase();
+        String key = args[0];
         String realName = args[1];
         BarColor barColor = BarColor.valueOf(args[2]);
         String month = args[3];
@@ -59,12 +59,11 @@ public class AddBirthday implements TabExecutor {
             return true;
         }
 
-        try {
-            Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
-            player.sendRichMessage("<gray>[<light_purple>" + key + "</light_purple>]</gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
-        } catch (InvalidConfigurationException e) {
-            player.sendRichMessage("<red>Something went wrong, see console for errors.");
-        }
+        boolean exists = Birthdays.getInstance().birthdayExists(args[0]);
+        player.sendRichMessage("<red>" + exists);
+
+        Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+        player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
 
         return true;
     }
@@ -143,7 +142,7 @@ public class AddBirthday implements TabExecutor {
         List<Character> letters = new ArrayList<>();
 
         for (byte i = 0; i < array.length; i++) {
-            letters.add(array[i].charAt(i));
+            letters.add(arg.charAt(i));
         }
 
         for (char i : letters) {

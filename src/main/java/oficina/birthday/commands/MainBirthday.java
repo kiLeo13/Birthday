@@ -28,7 +28,7 @@ public class MainBirthday implements TabExecutor {
                 sender.sendRichMessage("<gray>[</gray><gold>birthdays.yml</gold><gray>]</gray> <green>Configuration successfully reloaded!");
 
                 Birthday.getPlugin().reloadConfig();
-                sender.sendRichMessage("<gray>[</gray><gold>config.yml</gold><gray>]</gray> <greenConfiguration successfully reloaded!");
+                sender.sendRichMessage("<gray>[</gray><gold>config.yml</gold><gray>]</gray> <green>Configuration successfully reloaded!");
 
                 System.out.println(ChatColor.GREEN + "Files successfully reloaded!");
             } else {

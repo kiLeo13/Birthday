@@ -1,0 +1,11 @@
+oficina\birthday\commands\AddBirthday.class
+oficina\birthday\configuration\Birthdays$3.class
+oficina\birthday\configuration\Birthdays$1.class
+oficina\birthday\configuration\Birthdays.class
+oficina\birthday\commands\MainBirthday$1.class
+oficina\birthday\configuration\Birthdays$2.class
+oficina\birthday\Birthday.class
+oficina\birthday\commands\MainBirthday.class
+oficina\birthday\commands\RemoveBirthday.class
+oficina\birthday\listeners\ChatAsync.class
+oficina\birthday\runnables\BirthdayTest.class

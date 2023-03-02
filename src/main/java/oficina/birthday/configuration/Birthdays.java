@@ -41,18 +41,41 @@ public class Birthdays {
         }
     }
 
-    public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day) throws InvalidConfigurationException {
+    public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day) {
         if (!months().contains(month.toLowerCase())) throw new IllegalArgumentException("Invalid month input");
         if (!dayExists(day, month.toLowerCase())) throw new IllegalArgumentException("Invalid day input");
 
         ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
 
-        if (section == null) throw new InvalidConfigurationException("Path 'birthdays' is null");
+        if (section == null) section = getBirthdaysConfig().createSection("birthdays");
+
+        section.set(key + ".name", realName);
+        section.set(key + ".barcolor", barcolor.toString());
+        section.set(key + ".month", month);
+        section.set(key + ".day", day);
+
+        saveConfig();
     }
 
     public boolean removeBirthday(String key) {
         return true;
     }
+
+    public boolean birthdayExists(String arg) {
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays." + arg);
+
+        return section != null;
+    }
+
+    private void saveConfig() {
+        try {
+            getBirthdaysConfig().save(dataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* Resources */
 
     private boolean dayExists(byte day, String month) {
         if (day < 1 || day > 31) return false;
