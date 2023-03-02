@@ -3,15 +3,16 @@ package oficina.birthday.commands;
 import oficina.birthday.configuration.Birthdays;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.boss.BarColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AddBirthday implements TabExecutor {
@@ -29,26 +30,26 @@ public class AddBirthday implements TabExecutor {
             return true;
         }
 
-        if (barColors(args[2]) == null) {
-            player.sendRichMessage("<red>This color is not valid!\nPossible values: " + barColors(args[2]));
-            return true;
-        }
-
         if (!hasOnlyLetters(args[0])) {
             player.sendRichMessage("<red>Key input can only contain letters.");
             return true;
         }
 
-        byte month;
-        byte day;
-        String key = args[0];
-
-        try { month = Byte.parseByte(args[3]); }
-        catch (NumberFormatException e) {
-            player.sendRichMessage("<red>Month input has to be a number between 1 and 12, see console for errors.");
-            e.printStackTrace();
+        if (!isColorFine(args[2])) {
+            player.sendRichMessage("<red>BarColor input invalid.\nPossible values: " + barColorsString());
             return true;
         }
+
+        if (Birthdays.getInstance().months().contains(args[3])) {
+            player.sendRichMessage("<red>Month input invalid. Please write the name of a month, don't use numbers.");
+            return true;
+        }
+
+        String key = args[0];
+        String realName = args[1];
+        BarColor barColor = BarColor.valueOf(args[2]);
+        String month = args[3];
+        byte day;
 
         try { day = Byte.parseByte(args[4]); }
         catch (NumberFormatException e) {
@@ -57,36 +58,31 @@ public class AddBirthday implements TabExecutor {
             return true;
         }
 
+        Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+
         return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 1) return allPlayers();
-        if (args.length == 3) return thirdArg();
-        if (args.length == 4) return fourthArg();
-        if (args.length == 5) return fifthArg(args[4]);
+        if (args.length == 3) return barColor();
+        if (args.length == 4) return months();
+        if (args.length == 5) return days(args[3].toLowerCase());
 
         return new ArrayList<>();
     }
 
-    private ArrayList<String> thirdArg() {
-        return new ArrayList<>() {
-            {
-                add("BLUE");
-                add("GREEN");
-                add("PINK");
-                add("PURPLE");
-                add("RED");
-                add("WHITE");
-                add("YELLOW");
-            }
-        };
+    private List<String> barColor() {
+        List<String> colors = new ArrayList<>();
+
+        for (BarColor i : BarColor.values())
+            colors.add(i.toString());
+
+        return colors;
     }
 
-    private List<String> fourthArg() { return Birthdays.getInstance().months(); }
-
-    private List<String> fifthArg(String args) { return days(args); }
+    private List<String> months() { return Birthdays.getInstance().months(); }
 
     private List<String> days(String month) {
         List<String> returned = new ArrayList<>();
@@ -109,32 +105,20 @@ public class AddBirthday implements TabExecutor {
         return returned;
     }
 
-    private String barColors(String arg) {
-        List<String> colors = new ArrayList<>() {
-            {
-                add("BLUE");
-                add("GREEN");
-                add("PINK");
-                add("PURPLE");
-                add("RED");
-                add("WHITE");
-                add("YELLOW");
-            }
-        };
-
-        if (!colors.contains(arg)) return null;
-
+    private String barColorsString() {
+        List<String> colors = new ArrayList<>(List.of(Arrays.toString(BarColor.values())));
         StringBuilder builder = new StringBuilder();
         builder.append("<gray>[</gray>");
 
-        for (String i : colors)
-            builder.append("<gold>").append(i).append("<gray>,</gray> ");
+        String finalString;
 
-        String finalMessage = builder.toString();
-        finalMessage = finalMessage.stripTrailing();
+        for (String i : colors) {
+            builder.append("<gold>").append(i).append("<gray>, ");
+        }
 
-        finalMessage += "<gray>]</gray>";
-        return finalMessage;
+        finalString = builder.toString().stripTrailing();
+
+        return finalString + "<gray>]</gray>";
     }
 
     private List<String> allPlayers() {
@@ -160,5 +144,16 @@ public class AddBirthday implements TabExecutor {
         }
 
         return true;
+    }
+
+    private boolean isColorFine(String arg) {
+        try {
+            BarColor.valueOf(arg);
+            return true;
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

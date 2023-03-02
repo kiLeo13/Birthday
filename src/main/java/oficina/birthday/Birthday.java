@@ -1,6 +1,7 @@
 package oficina.birthday;
 
 import oficina.birthday.commands.AddBirthday;
+import oficina.birthday.commands.MainBirthday;
 import oficina.birthday.commands.RemoveBirthday;
 import oficina.birthday.listeners.ChatAsync;
 import oficina.birthday.runnables.BirthdayTest;
@@ -44,6 +45,9 @@ public final class Birthday extends JavaPlugin {
 
         PluginCommand birthdayRemove = this.getCommand("birthdayremove");
         if (birthdayRemove != null) birthdayRemove.setExecutor(new RemoveBirthday());
+
+        PluginCommand birthday = this.getCommand("birthday");
+        if (birthday != null) birthday.setExecutor(new MainBirthday());
     }
 
     private void registerListeners() {

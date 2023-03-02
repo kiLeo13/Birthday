@@ -1,4 +1,4 @@
-name: Birthday
+name: Celebration
 version: '${project.version}'
 main: oficina.birthday.Birthday
 api-version: 1.19
@@ -17,10 +17,17 @@ commands:
     usage: /<command> <key>
     aliases:
       - birthremove
+  birthday:
+    description: A command for general purpose.
+    permission: birthday.general
+    usage: /<command> <argument>
 permissions:
   birthday.add:
     description: Allows players to add a birthday.
     default: op
   birthday.remove:
     description: Allows players to remove a birthday.
+    default: op
+  birthday.general:
+    description: Allows players to use the general plugin command.
     default: op
