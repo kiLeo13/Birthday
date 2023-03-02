@@ -4,3 +4,21 @@ main: oficina.birthday.Birthday
 api-version: 1.19
 authors: [Leo13]
 description: A plugin to broadcast others' birthday.
+commands:
+  birthdayadd:
+    description: A command to add someone's birthday.
+    permission: birthday.add
+    aliases:
+      - birthadd
+  birthdayremove:
+    description: A command to remove someone's birthday.
+    permission: birthday.remove
+    aliases:
+      - birthremove
+permissions:
+  birthday.add:
+    description: Allows players to add a birthday.
+    default: op
+  birthday.remove:
+    description: Allows players to remove a birthday.
+    default: op

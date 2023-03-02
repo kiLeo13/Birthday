@@ -1,6 +1,7 @@
 package oficina.birthday.configuration;
 
 import oficina.birthday.Birthday;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,11 +38,18 @@ public class Birthdays {
         }
     }
 
-    public boolean addBirthDay(String key, String realName, byte month, byte day) {
+    public void addBirthDay(String key, String realName, byte month, byte day) {
+        if (month > 12) throw new IllegalArgumentException("Month cannot be greater than 12");
+        if (!dayExists(day, month) || day > 29 && month == 2) throw new IllegalArgumentException("Invalid day input");
 
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
     }
 
     public boolean removeBirthday(String key) {
-        
+
+    }
+
+    private boolean dayExists(byte day, byte month) {
+
     }
 }
