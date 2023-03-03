@@ -114,6 +114,25 @@ public class Birthdays {
         return -1;
     }
 
+    public List<String> getBirthdaysToday(String todayMonth, byte todayDay) {
+        if (!months().contains(todayMonth) || !dayExists(todayDay, todayMonth)) throw new IllegalArgumentException("Improper date");
+
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        if (section != null) {
+            List<String> result = new ArrayList<>();
+            Set<String> keys = section.getKeys(false);
+
+            for (String key : keys) {
+                String month = section.getString(key + ".month");
+                int day = section.getInt(key + ".day");
+                if (todayMonth.equalsIgnoreCase(month) && todayDay == day) result.add(key);
+            }
+            return result;
+        }
+        return null;
+    }
+
     private void saveConfig() {
         try {
             getBirthdaysConfig().save(dataFile);
