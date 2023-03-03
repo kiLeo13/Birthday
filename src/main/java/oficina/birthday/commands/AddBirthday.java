@@ -7,7 +7,6 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,11 +27,6 @@ public class AddBirthday implements TabExecutor {
 
         if (args.length != 5) {
             player.sendRichMessage("<red>Incorrect usage!\nSee: <green>/birthdayadd <gold><<yellow>key<gold>> <gold><<yellow>displayname<gold>> <gold><<yellow>barcolor<gold>> <gold><<yellow>month<gold>> <gold><<yellow>day<gold>>");
-            return true;
-        }
-
-        if (!hasOnlyLetters(args[0])) {
-            player.sendRichMessage("<red>Key input can only contain letters.");
             return true;
         }
 
@@ -60,7 +54,6 @@ public class AddBirthday implements TabExecutor {
         }
 
         boolean exists = Birthdays.getInstance().birthdayExists(args[0]);
-        player.sendRichMessage("<red>" + exists);
 
         Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
         player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
@@ -134,22 +127,6 @@ public class AddBirthday implements TabExecutor {
             finalPlayers.add(i.getName());
 
         return finalPlayers;
-    }
-
-    private boolean hasOnlyLetters(String arg) {
-        arg = arg.toLowerCase();
-        String[] array = arg.split("");
-        List<Character> letters = new ArrayList<>();
-
-        for (byte i = 0; i < array.length; i++) {
-            letters.add(arg.charAt(i));
-        }
-
-        for (char i : letters) {
-            if (!Character.isLetter(i)) return false;
-        }
-
-        return true;
     }
 
     private boolean isColorFine(String arg) {

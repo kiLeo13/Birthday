@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Birthdays {
     private static Birthdays instance;
@@ -41,7 +43,7 @@ public class Birthdays {
         }
     }
 
-    public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day) {
+    public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day) throws IllegalArgumentException {
         if (!months().contains(month.toLowerCase())) throw new IllegalArgumentException("Invalid month input");
         if (!dayExists(day, month.toLowerCase())) throw new IllegalArgumentException("Invalid day input");
 
@@ -57,14 +59,59 @@ public class Birthdays {
         saveConfig();
     }
 
-    public boolean removeBirthday(String key) {
-        return true;
+    public void removeBirthday(String key) {
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        if (section != null) section.set(key, null);
+
+        saveConfig();
     }
 
     public boolean birthdayExists(String arg) {
         ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays." + arg);
 
         return section != null;
+    }
+
+    public List<String> getBirthdays(String arg) {
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
+        String args = arg.toLowerCase();
+
+        if (section != null) return section.getKeys(false).stream()
+                .filter(name -> name.toLowerCase().startsWith(args))
+                .collect(Collectors.toList());
+
+        return new ArrayList<>();
+    }
+
+    /* Birthday Getters */
+
+    public String getBirthdayName(String key) {
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        if (section != null) return String.valueOf(section.get(key + ".name"));
+        return null;
+    }
+
+    public BarColor getBirthdayBarColor(String key) {
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        if (section != null) return BarColor.valueOf(String.valueOf(section.get(key + ".barcolor")));
+        return null;
+    }
+
+    public String getBirthdayMonth(String key) {
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        if (section != null) return String.valueOf(section.get(key + ".month"));
+        return null;
+    }
+
+    public byte getBirthdayDay(String key) {
+        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        if (section != null) return Byte.parseByte(String.valueOf(section.get(key + ".day")));
+        return -1;
     }
 
     private void saveConfig() {

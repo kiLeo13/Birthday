@@ -35,7 +35,7 @@ public final class Birthday extends JavaPlugin {
     public static Plugin getPlugin() { return plugin; }
 
     private void startRunnable() {
-        BirthdayTest test = new BirthdayTest(this);
+        BirthdayTest test = new BirthdayTest();
         test.runTaskTimer(this, 0, 1200);
     }
 

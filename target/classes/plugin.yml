@@ -1,5 +1,5 @@
 name: Celebration
-version: '1.5-dev'
+version: '1.7-dev'
 main: oficina.birthday.Birthday
 api-version: 1.19
 authors: [Leo13]
@@ -9,14 +9,10 @@ commands:
     description: A command to add someone's birthday.
     permission: birthday.add
     usage: /<command> <key> <displayname> <barcolor> <month> <day>
-    aliases:
-      - birthadd
   birthdayremove:
     description: A command to remove someone's birthday.
     permission: birthday.remove
     usage: /<command> <key>
-    aliases:
-      - birthremove
   birthday:
     description: A command for general purpose.
     permission: birthday.general

@@ -9,3 +9,4 @@ oficina\birthday\commands\MainBirthday.class
 oficina\birthday\commands\RemoveBirthday.class
 oficina\birthday\listeners\ChatAsync.class
 oficina\birthday\runnables\BirthdayTest.class
+oficina\birthday\runnables\ChatRunnable.class
