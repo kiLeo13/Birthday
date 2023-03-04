@@ -1,6 +1,7 @@
 package cool.birthday;
 
 import cool.birthday.commands.AddBirthday;
+import cool.birthday.listeners.PlayerJoin;
 import cool.birthday.runnables.MainBirthday;
 import cool.birthday.commands.RemoveBirthday;
 import cool.birthday.listeners.ChatAsync;
@@ -50,5 +51,6 @@ public final class Birthday extends JavaPlugin {
 
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new ChatAsync(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
     }
 }

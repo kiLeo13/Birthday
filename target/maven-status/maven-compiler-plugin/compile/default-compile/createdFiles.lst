@@ -2,6 +2,7 @@ cool\birthday\commands\RemoveBirthday.class
 cool\birthday\runnables\ChatRunnable.class
 cool\birthday\listeners\ChatAsync.class
 cool\birthday\commands\AddBirthday.class
+cool\birthday\listeners\PlayerJoin.class
 cool\birthday\configuration\Birthdays$3.class
 cool\birthday\configuration\Birthdays$2.class
 cool\birthday\configuration\Birthdays.class

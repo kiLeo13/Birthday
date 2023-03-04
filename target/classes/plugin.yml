@@ -1,5 +1,5 @@
 name: Celebration
-version: '1.7-dev'
+version: '1.8-dev'
 main: cool.birthday.Birthday
 api-version: 1.19
 authors: [Leo13]

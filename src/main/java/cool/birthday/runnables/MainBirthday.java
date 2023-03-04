@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class MainBirthday extends BukkitRunnable {
+    private static BossBar bossBar;
     private final Plugin plugin;
     private static String month;
     private static int day;
@@ -55,7 +56,7 @@ public class MainBirthday extends BukkitRunnable {
         });
     }
 
-    private void updateTime() {
+    public static void updateTime() {
         month = LocalDateTime.now().getMonth().toString().toLowerCase();
         day = LocalDateTime.now().getDayOfMonth();
         hour = LocalDateTime.now().getHour();
@@ -102,9 +103,7 @@ public class MainBirthday extends BukkitRunnable {
         return Title.title(MiniMessage.miniMessage().deserialize(title), MiniMessage.miniMessage().deserialize(finalSubtitle), Title.Times.times(Duration.ofMillis(fadeIn), Duration.ofMillis(stay), Duration.ofMillis(fadeOut)));
     }
 
-    private BossBar getBossBar(List<String> birthdays) {
-        BossBar bossBar;
-
+    public static BossBar getBossBar(List<String> birthdays) {
         StringBuilder builder = new StringBuilder();
         BarColor color = BarColor.PURPLE;
 
