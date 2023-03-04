@@ -6,7 +6,7 @@
 
     <groupId>stuff</groupId>
     <artifactId>Birthday</artifactId>
-    <version>1.10-dev</version>
+    <version>1.11-dev</version>
     <packaging>jar</packaging>
 
     <name>Birthday</name>

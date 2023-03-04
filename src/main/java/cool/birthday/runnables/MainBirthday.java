@@ -1,9 +1,9 @@
 package cool.birthday.runnables;
 
+import cool.birthday.Birthday;
 import cool.birthday.configuration.Birthdays;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -108,8 +108,8 @@ public class MainBirthday extends BukkitRunnable {
 
     public static void updateBossBar(List<String> birthdays) {
         StringBuilder builder = new StringBuilder();
-        BarColor color = BarColor.PURPLE;
-        double progress = minuteOfDay / 1440.0;
+        BarColor color = BarColor.valueOf(Birthday.getPlugin().getConfig().getString("barcolor-multiple-celebrants"));
+        double progress = (1440 - minuteOfDay) / 1440.0;
 
         if (birthdays.isEmpty()) {
             bossBar.setTitle(null);
@@ -122,11 +122,10 @@ public class MainBirthday extends BukkitRunnable {
         if (birthdays.size() > 1) {
 
             for (String name : birthdays){
-                builder.append(getPlayerBirthdayName(name)).append(ChatColor.DARK_GRAY).append(", ").append(ChatColor.YELLOW);
+                builder.append(ChatColor.YELLOW).append(getPlayerBirthdayName(name)).append(ChatColor.DARK_GRAY).append(", ");
             }
 
-            bossCelebrantName = builder.toString().stripTrailing();
-            bossCelebrantName = StringUtils.chop(bossCelebrantName);
+            bossCelebrantName = builder.toString().stripTrailing().substring(0, builder.length()-2);
 
         } else {
             if (section == null) bossCelebrantName = "Unknown";

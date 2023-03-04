@@ -84,22 +84,6 @@ public class Birthdays {
         return new ArrayList<>();
     }
 
-    /* Birthday Getters */
-
-    public String getBirthdayName(String key) {
-        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
-
-        if (section != null) return String.valueOf(section.get(key + ".name"));
-        return null;
-    }
-
-    public BarColor getBirthdayBarColor(String key) {
-        ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
-
-        if (section != null) return BarColor.valueOf(String.valueOf(section.get(key + ".barcolor")));
-        return null;
-    }
-
     public List<String> getBirthdaysToday(String todayMonth, int todayDay) {
         if (!months().contains(todayMonth) || !dayExists(todayDay, todayMonth)) throw new IllegalArgumentException("Improper date");
 
