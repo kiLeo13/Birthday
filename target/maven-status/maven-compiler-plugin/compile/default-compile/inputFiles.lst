@@ -1,7 +1,8 @@
-C:\Users\Leonardo\Downloads\Birthday\src\main\java\oficina\birthday\commands\AddBirthday.java
-C:\Users\Leonardo\Downloads\Birthday\src\main\java\oficina\birthday\commands\RemoveBirthday.java
-C:\Users\Leonardo\Downloads\Birthday\src\main\java\oficina\birthday\Birthday.java
-C:\Users\Leonardo\Downloads\Birthday\src\main\java\oficina\birthday\configuration\Birthdays.java
-C:\Users\Leonardo\Downloads\Birthday\src\main\java\oficina\birthday\runnables\BirthdayTest.java
-C:\Users\Leonardo\Downloads\Birthday\src\main\java\oficina\birthday\commands\MainBirthday.java
-C:\Users\Leonardo\Downloads\Birthday\src\main\java\oficina\birthday\listeners\ChatAsync.java
+C:\Users\Leonardo\Downloads\Birthday\src\main\java\cool\birthday\Birthday.java
+C:\Users\Leonardo\Downloads\Birthday\src\main\java\cool\birthday\commands\RemoveBirthday.java
+C:\Users\Leonardo\Downloads\Birthday\src\main\java\cool\birthday\listeners\ChatAsync.java
+C:\Users\Leonardo\Downloads\Birthday\src\main\java\cool\birthday\runnables\MainBirthday.java
+C:\Users\Leonardo\Downloads\Birthday\src\main\java\cool\birthday\configuration\Birthdays.java
+C:\Users\Leonardo\Downloads\Birthday\src\main\java\cool\birthday\commands\MainBirthday.java
+C:\Users\Leonardo\Downloads\Birthday\src\main\java\cool\birthday\commands\AddBirthday.java
+C:\Users\Leonardo\Downloads\Birthday\src\main\java\cool\birthday\runnables\ChatRunnable.java

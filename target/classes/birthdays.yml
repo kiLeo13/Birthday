@@ -6,4 +6,5 @@
 # - Reference: https://jd.papermc.io/paper/1.19/org/bukkit/boss/BossBar.html
 # Month: The month of the birthday (using their names, e.g: January, July).
 # Day: The day of the birthday.
+
 birthdays:

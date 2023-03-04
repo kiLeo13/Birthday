@@ -1,13 +1,13 @@
 # What message should we broadcast when someone's birthday?
-# Setting this to "" means the plugin will use the default one.
+# Leaving this empty or "" means the plugin will not send anything.
 
-announcement-message: ""
+announcement-message: ''
 
 # What sound effect should we play when broadcasting the birthday?
 # Possible sounds reference: https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
 # Leaving this empty or "" means no sound will be played.
 # Setting this to 'default' will make the plugin to use the default one (dragon growl).
-sound-effect: 'default'
+sound-effect:
 
 # Should we show a title to online players?
 # Leaving this empty or setting to '' means no title will be shown.

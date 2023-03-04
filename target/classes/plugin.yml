@@ -1,6 +1,6 @@
 name: Celebration
 version: '1.7-dev'
-main: oficina.birthday.Birthday
+main: cool.birthday.Birthday
 api-version: 1.19
 authors: [Leo13]
 description: A plugin to broadcast others' birthday.
