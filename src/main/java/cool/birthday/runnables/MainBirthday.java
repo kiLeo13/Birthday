@@ -22,12 +22,13 @@ import java.util.Collection;
 import java.util.List;
 
 public class MainBirthday extends BukkitRunnable {
-    private static BossBar bossBar;
+    private static BossBar bossBar = null;
     private final Plugin plugin;
     private static String month;
     private static int day;
     private static int hour;
     private static int minute;
+    private static int minuteOfDay;
 
     public MainBirthday(Plugin plugin) { this.plugin = plugin; }
 
@@ -35,8 +36,6 @@ public class MainBirthday extends BukkitRunnable {
     public void run() {
         updateTime();
         runTest(month.toLowerCase(), day);
-
-        setBossBarProgress(hour);
     }
 
     private void runTest(String month, int day) {
@@ -45,13 +44,15 @@ public class MainBirthday extends BukkitRunnable {
 
         players.forEach(player -> {
             if (birthdays.isEmpty()) {
-                getBossBar(birthdays).removePlayer(player);
+                updateBossBar(birthdays);
+                bossBar.removeAll();
                 return;
             }
 
             /* Call other functions if time is exactly 00:00 (12 AM) */
-            getBossBar(birthdays).removePlayer(player);
-            getBossBar(birthdays).addPlayer(player);
+            updateBossBar(birthdays);
+            bossBar.addPlayer(player);
+
             if (hour == 0 && minute == 0) additionalAnnouncements(player);
         });
     }
@@ -61,6 +62,8 @@ public class MainBirthday extends BukkitRunnable {
         day = LocalDateTime.now().getDayOfMonth();
         hour = LocalDateTime.now().getHour();
         minute = LocalDateTime.now().getMinute();
+
+        minuteOfDay = (hour * 60) + minute;
     }
 
     public void additionalAnnouncements(Player player) {
@@ -103,41 +106,58 @@ public class MainBirthday extends BukkitRunnable {
         return Title.title(MiniMessage.miniMessage().deserialize(title), MiniMessage.miniMessage().deserialize(finalSubtitle), Title.Times.times(Duration.ofMillis(fadeIn), Duration.ofMillis(stay), Duration.ofMillis(fadeOut)));
     }
 
-    public static BossBar getBossBar(List<String> birthdays) {
+    public static void updateBossBar(List<String> birthdays) {
         StringBuilder builder = new StringBuilder();
         BarColor color = BarColor.PURPLE;
+        double progress = minuteOfDay / 1440.0;
 
         if (birthdays.isEmpty()) {
-            bossBar = Bukkit.createBossBar("", BarColor.PURPLE, BarStyle.SOLID);
-            return bossBar;
+            bossBar.setTitle(null);
+            return;
         }
 
-        String bossCelebrant;
+        ConfigurationSection section = Birthdays.getInstance().getBirthdaysConfig().getConfigurationSection("birthdays");
+        String bossCelebrantName;
 
         if (birthdays.size() > 1) {
+
             for (String name : birthdays){
-                builder.append(name).append(ChatColor.DARK_GRAY).append(", ");
+                builder.append(getPlayerBirthdayName(name)).append(ChatColor.DARK_GRAY).append(", ").append(ChatColor.YELLOW);
             }
 
-            bossCelebrant = builder.toString().stripTrailing();
-            bossCelebrant = StringUtils.chop(bossCelebrant);
-        } else {
-            bossCelebrant = birthdays.get(0);
-            ConfigurationSection section = Birthdays.getInstance().getBirthdaysConfig().getConfigurationSection("birthdays");
+            bossCelebrantName = builder.toString().stripTrailing();
+            bossCelebrantName = StringUtils.chop(bossCelebrantName);
 
-            if (section != null) color = BarColor.valueOf(section.getString(birthdays.get(0) + ".barcolor"));
+        } else {
+            if (section == null) bossCelebrantName = "Unknown";
+            else {
+                color = BarColor.valueOf(section.getString(birthdays.get(0) + ".barcolor"));
+                bossCelebrantName = section.getString(birthdays.get(0) + ".name");
+            }
         }
 
-        if (birthdays.size() == 1) bossBar = Bukkit.createBossBar(ChatColor.GOLD + "Birthday Celebrant: ", color, BarStyle.SOLID);
-        else bossBar = Bukkit.createBossBar(ChatColor.GOLD + "Birthday Celebrants: " + ChatColor.YELLOW + bossCelebrant, color, BarStyle.SOLID);
+        bossBar.setProgress(progress);
 
-        return bossBar;
+        if (birthdays.size() == 1) {
+            bossBar.setTitle(ChatColor.GOLD + "Celebrant: " + ChatColor.YELLOW + bossCelebrantName);
+            bossBar.setColor(color);
+        } else {
+            bossBar.setTitle(ChatColor.GOLD + "Celebrants: " + ChatColor.YELLOW + bossCelebrantName);
+            bossBar.setColor(color);
+        }
     }
 
-    private void setBossBarProgress(int hour) {
-        List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(month, day);
-        double progress = hour / 24.0;
+    public static BossBar getBossBar() { return bossBar; }
 
-        getBossBar(birthdays).setProgress(progress);
+    public static void createBossBar() {
+        if (bossBar == null) bossBar = Bukkit.createBossBar("", BarColor.PURPLE, BarStyle.SOLID);
+    }
+
+    private static String getPlayerBirthdayName(String key) {
+        ConfigurationSection section = Birthdays.getInstance().getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        if (section == null) return "Unknown";
+
+        return section.getString(key + ".name");
     }
 }

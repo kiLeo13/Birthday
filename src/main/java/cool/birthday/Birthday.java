@@ -22,8 +22,10 @@ public final class Birthday extends JavaPlugin {
         registerListeners();
 
         startRunnable();
-
         saveDefaultConfig();
+
+        // Create BossBar
+        MainBirthday.createBossBar();
     }
 
     @Override
@@ -35,7 +37,7 @@ public final class Birthday extends JavaPlugin {
 
     private void startRunnable() {
         MainBirthday test = new MainBirthday(this);
-        test.runTaskTimer(this, 0, 1200);
+        test.runTaskTimer(this, 0, 20);
     }
 
     private void registerCommands() {
