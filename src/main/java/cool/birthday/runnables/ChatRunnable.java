@@ -13,7 +13,7 @@ public class ChatRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        addOneSec();
+        if (!confirmTime.isEmpty()) addOneSec();
 
         getMappedPlayers();
     }
@@ -24,16 +24,21 @@ public class ChatRunnable extends BukkitRunnable {
 
     public static List<Player> getMappedPlayers() {
         List<Player> keys = new ArrayList<>();
+        List<Player> confirmTimeToRemove = new ArrayList<>();
+        List<Player> playerArgsToRemove = new ArrayList<>();
 
         confirmTime.forEach((key, value) -> {
-            if (confirmTime.get(key) < 0 || confirmTime.get(key) > 10) {
-                confirmTime.remove(key, value);
+            if (confirmTime.get(key) > 10) {
+                confirmTimeToRemove.add(key);
 
-                playerArgs.remove(key);
+                playerArgsToRemove.add(key);
 
                 key.sendRichMessage("<red>Command canceled.");
             } else keys.add(key);
         });
+
+        confirmTimeToRemove.forEach(confirmTime::remove);
+        playerArgsToRemove.forEach(playerArgs::remove);
 
         return keys;
     }

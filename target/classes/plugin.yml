@@ -1,0 +1,29 @@
+name: Celebration
+version: '1.12-dev'
+main: cool.birthday.Birthday
+api-version: 1.19
+authors: [Leo13]
+description: A plugin to broadcast others' birthday.
+commands:
+  birthdayadd:
+    description: A command to add someone's birthday.
+    permission: birthday.add
+    usage: /<command> <key> <displayname> <barcolor> <month> <day>
+  birthdayremove:
+    description: A command to remove someone's birthday.
+    permission: birthday.remove
+    usage: /<command> <key>
+  birthday:
+    description: A command for general purpose.
+    permission: birthday.general
+    usage: /<command> <argument>
+permissions:
+  birthday.add:
+    description: Allows players to add a birthday.
+    default: op
+  birthday.remove:
+    description: Allows players to remove a birthday.
+    default: op
+  birthday.general:
+    description: Allows players to use the general plugin command.
+    default: op

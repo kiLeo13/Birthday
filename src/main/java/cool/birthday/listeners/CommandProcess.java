@@ -1,5 +1,6 @@
 package cool.birthday.listeners;
 
+import cool.birthday.runnables.ChatRunnable;
 import cool.birthday.runnables.MainBirthday;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,5 +17,10 @@ public class CommandProcess implements Listener {
         String message = event.getMessage();
 
         if (message.equalsIgnoreCase("/reload confirm")) MainBirthday.getBossBar().removeAll();
+
+        if (message.startsWith("/birthdayadd") && ChatRunnable.getMappedPlayers().contains(player)) {
+            player.sendRichMessage("<red>You cannot run this command right now.");
+            event.setCancelled(true);
+        }
     }
 }

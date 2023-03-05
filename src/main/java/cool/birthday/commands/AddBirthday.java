@@ -2,7 +2,7 @@ package cool.birthday.commands;
 
 import cool.birthday.configuration.Birthdays;
 import cool.birthday.runnables.ChatRunnable;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import cool.birthday.runnables.MainBirthday;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.boss.BarColor;
@@ -14,15 +14,21 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class AddBirthday implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+        String monthNow = LocalDateTime.now().getMonth().toString();
+        int dayNow = LocalDateTime.now().getDayOfMonth();
+        List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(monthNow, dayNow);
 
         if (!(sender instanceof Player player)) {
             sender.sendRichMessage("<red>Only players can run this command.");
@@ -34,7 +40,7 @@ public class AddBirthday implements TabExecutor {
             return true;
         }
 
-        if (!isColorFine(args[2])) {
+        if (!isColorFine(args[2].toUpperCase())) {
             player.sendRichMessage("<red>BarColor input invalid.\nPossible values: " + barColorsString());
             return true;
         }
@@ -46,7 +52,7 @@ public class AddBirthday implements TabExecutor {
 
         String key = args[0];
         String realName = args[1];
-        BarColor barColor = BarColor.valueOf(args[2]);
+        BarColor barColor = BarColor.valueOf(args[2].toUpperCase());
         String month = args[3];
         byte day;
 
@@ -72,12 +78,19 @@ public class AddBirthday implements TabExecutor {
             String currentCelebrantMonth = getFormattedMonth(section, key);
             String currentCelebrantDay = getFormattedDay(section, key, player);
 
-            player.sendRichMessage("<yellow>There is already a key with this name, would like to override it?\n\n<gold>Name: <yellow>" + currentCelebrantName + "</yellow>\nBarColor: <yellow>" + currentCelebrantBarColor + "</yellow>\nDate: <yellow>" + currentCelebrantMonth + ", " + currentCelebrantDay + "</yellow>\n\nReply with: <red>YES <yellow> or <red>NO");
+            player.sendRichMessage("<yellow>There is already a key with this name, would like to override it?\n\n<red>Name: <yellow>" + currentCelebrantName + "</yellow>\nBarColor: <yellow>" + currentCelebrantBarColor + "</yellow>\nDate: <yellow>" + currentCelebrantMonth + ", " + currentCelebrantDay + "</yellow>\n\nReply with: <red>YES <yellow> or <red>NO");
             ChatRunnable.addMappingPlayer(player, args);
             return true;
         }
 
-        Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+        try {
+            Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+            MainBirthday.updateBossBar(birthdays);
+        } catch (IllegalArgumentException e) {
+            player.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
+            e.printStackTrace();
+        }
+
         player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
 
         return true;
@@ -85,24 +98,28 @@ public class AddBirthday implements TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length == 1) return allPlayers();
-        if (args.length == 3) return barColor();
-        if (args.length == 4) return months();
+        if (args.length == 1) return allPlayers(args[0].toLowerCase());
+        if (args.length == 3) return barColor(args[2].toLowerCase());
+        if (args.length == 4) return months(args[3].toLowerCase());
         if (args.length == 5) return days(args[3].toLowerCase());
 
         return new ArrayList<>();
     }
 
-    private List<String> barColor() {
+    private List<String> barColor(String arg) {
         List<String> colors = new ArrayList<>();
 
         for (BarColor i : BarColor.values())
             colors.add(i.toString());
 
-        return colors;
+        return colors.stream().filter(e -> e.toLowerCase().startsWith(arg.toLowerCase())).collect(Collectors.toList());
     }
 
-    private List<String> months() { return Birthdays.getInstance().months(); }
+    private List<String> months(String arg) {
+        List<String> months = Birthdays.getInstance().months();
+
+        return months.stream().filter(e -> e.toLowerCase().startsWith(arg.toLowerCase())).collect(Collectors.toList());
+    }
 
     private List<String> days(String month) {
         List<String> returned = new ArrayList<>();
@@ -141,19 +158,19 @@ public class AddBirthday implements TabExecutor {
         return finalString + "<gray>]</gray>";
     }
 
-    private List<String> allPlayers() {
+    private List<String> allPlayers(String arg) {
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
         List<String> finalPlayers = new ArrayList<>();
 
         for (OfflinePlayer i : offlinePlayers)
             finalPlayers.add(i.getName());
 
-        return finalPlayers;
+        return finalPlayers.stream().filter(e -> e.toLowerCase().startsWith(arg)).collect(Collectors.toList());
     }
 
     private boolean isColorFine(String arg) {
         try {
-            BarColor.valueOf(arg);
+            BarColor.valueOf(arg.toUpperCase());
             return true;
         }
         catch (IllegalArgumentException e) {
@@ -200,13 +217,13 @@ public class AddBirthday implements TabExecutor {
 
         if (rawColor == null) return "Unknown";
 
-        if (rawColor.equalsIgnoreCase("BLUE")) return "<aqua>BLUE";
-        if (rawColor.equalsIgnoreCase("GREEN")) return "<green>GREEN";
-        if (rawColor.equalsIgnoreCase("PINK")) return "<light_purple>PINK";
-        if (rawColor.equalsIgnoreCase("PURPLE")) return "<dark_purple>PURPLE";
-        if (rawColor.equalsIgnoreCase("RED")) return "<red>RED";
-        if (rawColor.equalsIgnoreCase("WHITE")) return "<white>WHITE";
-        if (rawColor.equalsIgnoreCase("YELLOW")) return "<yellow>YELLOW";
+        if (rawColor.equalsIgnoreCase("BLUE")) return "<aqua>BLUE</aqua>";
+        if (rawColor.equalsIgnoreCase("GREEN")) return "<green>GREEN</green>";
+        if (rawColor.equalsIgnoreCase("PINK")) return "<light_purple>PINK</light_purple>";
+        if (rawColor.equalsIgnoreCase("PURPLE")) return "<dark_purple>PURPLE</dark_purple>";
+        if (rawColor.equalsIgnoreCase("RED")) return "<red>RED</red>";
+        if (rawColor.equalsIgnoreCase("WHITE")) return "<white>WHITE</white>";
+        if (rawColor.equalsIgnoreCase("YELLOW")) return "<yellow>YELLOW</yellow>";
 
         return "Unknown";
     }

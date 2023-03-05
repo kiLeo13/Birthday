@@ -42,7 +42,7 @@ public final class Birthday extends JavaPlugin {
         test.runTaskTimer(this, 0, 20);
 
         ChatRunnable chat = new ChatRunnable();
-        chat.runTaskTimer(this, 0, 20);
+        chat.runTaskTimer(this, 0, 1200);
     }
 
     private void registerCommands() {

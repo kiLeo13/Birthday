@@ -85,7 +85,7 @@ public class Birthdays {
     }
 
     public List<String> getBirthdaysToday(String todayMonth, int todayDay) {
-        if (!months().contains(todayMonth) || !dayExists(todayDay, todayMonth)) throw new IllegalArgumentException("Improper date");
+        if (!months().contains(todayMonth.toLowerCase()) || !dayExists(todayDay, todayMonth.toLowerCase())) throw new IllegalArgumentException("Improper date");
 
         ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
         List<String> birthdays = new ArrayList<>();
@@ -154,7 +154,6 @@ public class Birthdays {
     public List<String> months30() {
         return new ArrayList<>() {
             {
-                add("february");
                 add("april");
                 add("june");
                 add("september");

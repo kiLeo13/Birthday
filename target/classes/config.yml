@@ -1,0 +1,34 @@
+# What message should we broadcast when someone's birthday?
+# Leaving this empty or "" means the plugin will not send anything.
+
+announcement-message: ''
+
+# What sound effect should we play when broadcasting the birthday?
+# Possible sounds reference: https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
+# Leaving this empty or "" means no sound will be played.
+# Setting this to 'default' will make the plugin to use the default one (dragon growl).
+sound-effect:
+
+# Should we show a title to online players?
+# Leaving this empty or setting to '' means no title will be shown.
+title-shown:
+
+# This option will only work if the above one is NOT null.
+# What subtitle should we show to online players?
+# Leaving this empty or setting to '' means no subtitle will be shown.
+subtitle-shown:
+
+# This option will be ignored if "title-shown" is null
+# What times configuration should we use for titles?
+# Leaving this empty will make every option be 1 second.
+# These are the pattern used in titles in milliseconds:
+# To find the value in milliseconds just do "<value in seconds> * 1000".
+times:
+  fadeIn: 500
+  stay: 3000
+  fadeOut: 500
+
+# Every player can setup their own color, but a BossBar cannot have multiple colors.
+# So what should be the BossBar color if there are more than one Birthday Celebrant?
+# Colors Reference: https://jd.papermc.io/paper/1.19/org/bukkit/boss/BarColor.html
+barcolor-multiple-celebrants: PURPLE
