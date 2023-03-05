@@ -28,6 +28,7 @@ public class MainBirthday extends BukkitRunnable {
     private static int day;
     private static int hour;
     private static int minute;
+    private static int second;
     private static int minuteOfDay;
 
     public MainBirthday(Plugin plugin) { this.plugin = plugin; }
@@ -47,7 +48,7 @@ public class MainBirthday extends BukkitRunnable {
         players.forEach(player -> {
             if (birthdays.isEmpty()) {
                 updateBossBar(birthdays);
-                bossBar.addPlayer(player);
+                bossBar.removeAll();
                 return;
             }
 
@@ -55,7 +56,8 @@ public class MainBirthday extends BukkitRunnable {
             updateBossBar(birthdays);
             bossBar.addPlayer(player);
 
-            if (hour == hourAnnouncement && minute == minuteAnnouncement) additionalAnnouncements(player);
+            if (hour == hourAnnouncement && minute == minuteAnnouncement && second == 0)
+                additionalAnnouncements(player);
         });
     }
 
@@ -64,6 +66,7 @@ public class MainBirthday extends BukkitRunnable {
         day = LocalDateTime.now().getDayOfMonth();
         hour = LocalDateTime.now().getHour();
         minute = LocalDateTime.now().getMinute();
+        second = LocalDateTime.now().getSecond();
 
         minuteOfDay = (hour * 60) + minute;
     }

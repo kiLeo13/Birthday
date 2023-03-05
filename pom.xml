@@ -6,7 +6,7 @@
 
     <groupId>stuff</groupId>
     <artifactId>Birthday</artifactId>
-    <version>1.13-dev</version>
+    <version>1.14-dev</version>
     <packaging>jar</packaging>
 
     <name>Birthday</name>
@@ -66,6 +66,12 @@
             <artifactId>paper-api</artifactId>
             <version>1.19.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>23.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

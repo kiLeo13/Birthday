@@ -15,20 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AddBirthday implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-
-        String monthNow = LocalDateTime.now().getMonth().toString();
-        int dayNow = LocalDateTime.now().getDayOfMonth();
-        List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(monthNow, dayNow);
 
         if (!(sender instanceof Player player)) {
             sender.sendRichMessage("<red>Only players can run this command.");
@@ -90,7 +83,20 @@ public class AddBirthday implements TabExecutor {
 
         try {
             Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+
+            String monthNow = LocalDateTime.now().getMonth().toString();
+            int dayNow = LocalDateTime.now().getDayOfMonth();
+            List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(monthNow, dayNow);
+
             MainBirthday.updateBossBar(birthdays);
+
+            if (birthdays.isEmpty()) MainBirthday.getBossBar().removeAll();
+            else {
+                Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+
+                players.forEach(player1 -> MainBirthday.getBossBar().addPlayer(player));
+            }
+
             player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
         } catch (IllegalArgumentException e) {
             player.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");

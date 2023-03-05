@@ -40,7 +40,7 @@ public final class Birthday extends JavaPlugin {
 
     private void startRunnable() {
         MainBirthday test = new MainBirthday(this);
-        test.runTaskTimer(this, 0, 1200);
+        test.runTaskTimer(this, 0, 20);
 
         ChatRunnable chat = new ChatRunnable();
         chat.runTaskTimer(this, 0, 20);

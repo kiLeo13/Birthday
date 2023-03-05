@@ -2,6 +2,7 @@ package cool.birthday.commands;
 
 import cool.birthday.configuration.Birthdays;
 import cool.birthday.runnables.MainBirthday;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class RemoveBirthday implements TabExecutor {
@@ -27,12 +29,21 @@ public class RemoveBirthday implements TabExecutor {
             return true;
         }
 
+        Birthdays.getInstance().reloadBirthdaysConfig();
+
         String monthNow = LocalDateTime.now().getMonth().toString();
         int dayNow = LocalDateTime.now().getDayOfMonth();
         List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(monthNow, dayNow);
 
         Birthdays.getInstance().removeBirthday(args[0]);
         MainBirthday.updateBossBar(birthdays);
+
+        if (birthdays.isEmpty()) MainBirthday.getBossBar().removeAll();
+        else {
+            Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+
+            players.forEach(player1 -> MainBirthday.getBossBar().addPlayer(player));
+        }
 
         return true;
     }

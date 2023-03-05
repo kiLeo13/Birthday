@@ -15,7 +15,7 @@ commands:
     usage: /<command> <key>
   birthday:
     description: A command for general purpose.
-    permission: birthday.general
+    permission: birthday.reload
     usage: /<command> <argument>
 permissions:
   birthday.add:
@@ -24,6 +24,6 @@ permissions:
   birthday.remove:
     description: Allows players to remove a birthday.
     default: op
-  birthday.general:
+  birthday.reload:
     description: Allows players to use the general plugin command.
     default: op
