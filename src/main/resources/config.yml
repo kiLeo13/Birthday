@@ -28,6 +28,14 @@ times:
   stay: 3000
   fadeOut: 500
 
+# The main announcement is when the title/subtitle, sound effect and announcement message are sent.
+# When should be this announcement?
+# Keep in mind that this value does NOT affect the bossbar at the top of the screen.
+# Please use 24-hours format.
+main-announcement:
+  hour: 00
+  minute: 00
+
 # Every player can setup their own color, but a BossBar cannot have multiple colors.
 # So what should be the BossBar color if there are more than one Birthday Celebrant?
 # Colors Reference: https://jd.papermc.io/paper/1.19/org/bukkit/boss/BarColor.html

@@ -39,13 +39,15 @@ public class MainBirthday extends BukkitRunnable {
     }
 
     private void runTest(String month, int day) {
+        int hourAnnouncement = plugin.getConfig().getInt("main-announcement.hour");
+        int minuteAnnouncement = plugin.getConfig().getInt("main-announcement.minute");
         List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(month, day);
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
         players.forEach(player -> {
             if (birthdays.isEmpty()) {
                 updateBossBar(birthdays);
-                bossBar.removeAll();
+                bossBar.addPlayer(player);
                 return;
             }
 
@@ -53,7 +55,7 @@ public class MainBirthday extends BukkitRunnable {
             updateBossBar(birthdays);
             bossBar.addPlayer(player);
 
-            if (hour == 0 && minute == 0) additionalAnnouncements(player);
+            if (hour == hourAnnouncement && minute == minuteAnnouncement) additionalAnnouncements(player);
         });
     }
 
@@ -69,14 +71,9 @@ public class MainBirthday extends BukkitRunnable {
     public void additionalAnnouncements(Player player) {
         /* Playsound if enabled */
         String sound = plugin.getConfig().getString("sound-effect");
-        Sound soundEffect;
+        Sound soundEffect = getProperSound(sound);
 
-        if (sound == null) sound = "";
-
-        if (sound.equalsIgnoreCase("default")) soundEffect = Sound.ENTITY_ENDER_DRAGON_GROWL;
-        else soundEffect = Sound.valueOf(sound);
-
-        if (!sound.equalsIgnoreCase("")) player.playSound(player.getLocation(), soundEffect, SoundCategory.MASTER, 1.0f, 1.0f);
+        if (getProperSound(sound) != null) player.playSound(player.getLocation(), soundEffect, SoundCategory.MASTER, 1.0f, 1.0f);
 
         /* Show Title and Subtitle if enabled */
         Title title = callTitle();
@@ -94,9 +91,9 @@ public class MainBirthday extends BukkitRunnable {
         String title = plugin.getConfig().getString("title-shown");
         String subtitle = plugin.getConfig().getString("subtitle-shown");
 
-        long fadeIn = plugin.getConfig().getIntegerList("times").get(0);
-        long stay = plugin.getConfig().getIntegerList("times").get(1);
-        long fadeOut = plugin.getConfig().getIntegerList("times").get(2);
+        long fadeIn = plugin.getConfig().getInt("times.fadeIn");
+        long stay = plugin.getConfig().getInt("times.stay");
+        long fadeOut = plugin.getConfig().getInt("times.fadeOut");
 
         if (title == null || title.equalsIgnoreCase("")) return null;
         if (subtitle == null || subtitle.equalsIgnoreCase("")) subtitle = "";
@@ -113,6 +110,7 @@ public class MainBirthday extends BukkitRunnable {
 
         if (birthdays.isEmpty()) {
             bossBar.setTitle(null);
+            bossBar.removeAll();
             return;
         }
 
@@ -138,7 +136,7 @@ public class MainBirthday extends BukkitRunnable {
         bossBar.setProgress(progress);
 
         if (birthdays.size() == 1) {
-            bossBar.setTitle(ChatColor.GOLD + "Celebrant: " + ChatColor.YELLOW + bossCelebrantName);
+            bossBar.setTitle(ChatColor.LIGHT_PURPLE + "⭐ " + ChatColor.GOLD + "Celebrant: " + ChatColor.YELLOW + bossCelebrantName + ChatColor.LIGHT_PURPLE + " ⭐");
             bossBar.setColor(color);
         } else {
             bossBar.setTitle(ChatColor.GOLD + "Celebrants: " + ChatColor.YELLOW + bossCelebrantName);
@@ -158,5 +156,21 @@ public class MainBirthday extends BukkitRunnable {
         if (section == null) return "Unknown";
 
         return section.getString(key + ".name");
+    }
+
+    private Sound getProperSound(String soundFile) {
+        Sound sound;
+
+        if (soundFile == null || soundFile.equalsIgnoreCase("")) return null;
+
+        if (soundFile.equalsIgnoreCase("default")) return Sound.ENTITY_ENDER_DRAGON_GROWL;
+
+        try {
+            sound = Sound.valueOf(soundFile);
+            return sound;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

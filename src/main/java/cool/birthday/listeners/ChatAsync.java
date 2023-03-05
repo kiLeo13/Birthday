@@ -40,12 +40,17 @@ public class ChatAsync implements Listener {
             String month = ChatRunnable.getPlayerCommandArgs(player)[3];
             byte day = Byte.parseByte(ChatRunnable.getPlayerCommandArgs(player)[4]);
 
-            Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+            try {
+                Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+                MainBirthday.updateBossBar(birthdays);
 
-            if (realName.endsWith("s")) player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <gold>" + realName + "</gold><yellow>' birthday has been successfully overriden!</yellow>");
-            else player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <gold>" + realName + "</gold><yellow>'s birthday has been successfully overriden!</yellow>");
+                if (realName.endsWith("s")) player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <gold>" + realName + "</gold><yellow>' birthday has been successfully overriden!</yellow>");
+                else player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <gold>" + realName + "</gold><yellow>'s birthday has been successfully overriden!</yellow>");
+            } catch (IllegalArgumentException e) {
+                player.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
+                e.printStackTrace();
+            }
 
-            MainBirthday.updateBossBar(birthdays);
         } else {
             player.sendRichMessage("<yellow>Okay! Birthday hasn't been added or overriden.");
         }

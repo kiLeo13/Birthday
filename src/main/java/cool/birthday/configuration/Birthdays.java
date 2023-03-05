@@ -44,8 +44,8 @@ public class Birthdays {
     }
 
     public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day) throws IllegalArgumentException {
-        if (!months().contains(month.toLowerCase())) throw new IllegalArgumentException("Invalid month input");
-        if (!dayExists(day, month.toLowerCase())) throw new IllegalArgumentException("Invalid day input");
+        if (!months().contains(month.toLowerCase())) throw new IllegalArgumentException("Invalid month input, did you type the name of the month correctly with no numbers?");
+        if (!dayExists(day, month.toLowerCase())) throw new IllegalArgumentException("Invalid day input, does the month have the day you provided?");
 
         ConfigurationSection section = getBirthdaysConfig().getConfigurationSection("birthdays");
 
@@ -112,7 +112,7 @@ public class Birthdays {
 
     /* Resources */
 
-    private boolean dayExists(int day, String month) {
+    public boolean dayExists(int day, String month) {
         if (day < 1 || day > 31) return false;
 
         return !(day > 30 && !months31().contains(month) || (day > 29 && month.equalsIgnoreCase("february")));

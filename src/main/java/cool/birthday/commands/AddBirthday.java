@@ -45,21 +45,26 @@ public class AddBirthday implements TabExecutor {
             return true;
         }
 
-        if (!Birthdays.getInstance().months().contains(args[3])) {
+        String key = args[0];
+        String realName = args[1];
+        String month = args[3].toLowerCase();
+        byte day;
+        BarColor barColor = BarColor.valueOf(args[2].toUpperCase());
+
+        try { day = Byte.parseByte(args[4]); }
+        catch (NumberFormatException e) {
+            player.sendRichMessage("<red>Day input has to be a number between 1 and 31, see console for errors.");
+            e.printStackTrace();
+            return true;
+        }
+
+        if (!Birthdays.getInstance().months().contains(month)) {
             player.sendRichMessage("<red>Month input invalid. Please write the name of a month, don't use numbers.");
             return true;
         }
 
-        String key = args[0];
-        String realName = args[1];
-        BarColor barColor = BarColor.valueOf(args[2].toUpperCase());
-        String month = args[3];
-        byte day;
-
-        try { day = Byte.parseByte(args[4]); }
-        catch (NumberFormatException e) {
-            sender.sendRichMessage("<red>Day input has to be a number between 1 and 31, see console for errors.");
-            e.printStackTrace();
+        if (!Birthdays.getInstance().dayExists(day, month)) {
+            player.sendRichMessage("<red>The provided day does not exist in the given month, please, provide a valid one.");
             return true;
         }
 
@@ -86,12 +91,11 @@ public class AddBirthday implements TabExecutor {
         try {
             Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
             MainBirthday.updateBossBar(birthdays);
+            player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
         } catch (IllegalArgumentException e) {
             player.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
             e.printStackTrace();
         }
-
-        player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
 
         return true;
     }

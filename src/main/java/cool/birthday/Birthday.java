@@ -1,6 +1,7 @@
 package cool.birthday;
 
 import cool.birthday.commands.AddBirthday;
+import cool.birthday.commands.GeneralBirthday;
 import cool.birthday.listeners.CommandProcess;
 import cool.birthday.listeners.PlayerJoin;
 import cool.birthday.runnables.ChatRunnable;
@@ -39,10 +40,10 @@ public final class Birthday extends JavaPlugin {
 
     private void startRunnable() {
         MainBirthday test = new MainBirthday(this);
-        test.runTaskTimer(this, 0, 20);
+        test.runTaskTimer(this, 0, 1200);
 
         ChatRunnable chat = new ChatRunnable();
-        chat.runTaskTimer(this, 0, 1200);
+        chat.runTaskTimer(this, 0, 20);
     }
 
     private void registerCommands() {
@@ -53,7 +54,7 @@ public final class Birthday extends JavaPlugin {
         if (birthdayRemove != null) birthdayRemove.setExecutor(new RemoveBirthday());
 
         PluginCommand birthday = this.getCommand("birthday");
-        if (birthday != null) birthday.setExecutor(new cool.birthday.commands.MainBirthday());
+        if (birthday != null) birthday.setExecutor(new GeneralBirthday());
     }
 
     private void registerListeners() {
