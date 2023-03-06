@@ -261,10 +261,13 @@ public class AddBirthday implements TabExecutor {
         List<Boolean> finalTesting = new ArrayList<>();
 
         if (currName.equals(newName)) finalTesting.add(true);
+        else finalTesting.add(false);
 
         if (currBarColor.equals(newBarColor)) finalTesting.add(true);
+        else finalTesting.add(false);
 
         if (currMonth.equalsIgnoreCase(newmonth)) finalTesting.add(true);
+        else finalTesting.add(false);
 
         if (currDay == newDay) finalTesting.add(true);
         else finalTesting.add(false);

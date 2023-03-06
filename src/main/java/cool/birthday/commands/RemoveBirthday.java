@@ -5,6 +5,7 @@ import cool.birthday.runnables.MainBirthday;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +20,13 @@ public class RemoveBirthday implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player) && !(sender instanceof ConsoleCommandSender)) {
             sender.sendRichMessage("<red>Only players can run this command.");
             return true;
         }
 
         if (args.length != 1) {
-            player.sendRichMessage("<red>Incorrect usage!\nSee: <green>/birthdayremove <gold><<yellow>key<gold>>");
+            sender.sendRichMessage("<red>Incorrect usage!\nSee: <green>/birthdayremove <gold><<yellow>key<gold>>");
             return true;
         }
 
@@ -42,7 +43,7 @@ public class RemoveBirthday implements TabExecutor {
         else {
             Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
-            players.forEach(player1 -> MainBirthday.getBossBar().addPlayer(player));
+            players.forEach(player -> MainBirthday.getBossBar().addPlayer(player));
         }
 
         return true;
