@@ -17,6 +17,10 @@ commands:
     description: A command for general purpose.
     permission: birthday.reload
     usage: /<command> <argument>
+  birthdayget:
+    description: Gets all the information registered of someone's birthday register.
+    permission: birthday.get
+    usage: /<command> <key> [information]
 permissions:
   birthday.add:
     description: Allows players to add a birthday.
@@ -26,4 +30,7 @@ permissions:
     default: op
   birthday.reload:
     description: Allows players to use the general plugin command.
+    default: op
+  birthday.get:
+    description: Allows to get all information about someone's birthday register.
     default: op

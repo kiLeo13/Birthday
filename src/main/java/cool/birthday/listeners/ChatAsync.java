@@ -28,7 +28,7 @@ public class ChatAsync implements Listener {
         if (!isInConfirmation(player)) return;
 
         if (!message.equalsIgnoreCase("yes") && !message.equalsIgnoreCase("no")) {
-            ChatRunnable.removeMappedPlayer(player);
+            ChatRunnable.removeMappedSender(player);
             player.sendRichMessage("<red>Command canceled. Replied message did not match the expected.");
             return;
         }
@@ -44,8 +44,8 @@ public class ChatAsync implements Listener {
                 Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
                 MainBirthday.updateBossBar(birthdays);
 
-                if (realName.endsWith("s")) player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <gold>" + realName + "</gold><yellow>' birthday has been successfully overriden!</yellow>");
-                else player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <gold>" + realName + "</gold><yellow>'s birthday has been successfully overriden!</yellow>");
+                if (realName.endsWith("s")) player.sendRichMessage("<gradient:gold:red:gold>==================================================</gradient>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]\n\n<b>|</b></dark_gray> <gold>" + realName + "</gold><yellow>' birthday has been successfully overriden!</yellow>\n\n<gradient:gold:red:gold>==================================================</gradient>");
+                else player.sendRichMessage("<gradient:gold:red:gold>==================================================</gradient>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]\n\n<b>|</b></dark_gray> <gold>" + realName + "</gold><yellow>'s birthday has been successfully overriden!</yellow>\n\n<gradient:gold:red:gold>==================================================</gradient>");
             } catch (IllegalArgumentException e) {
                 player.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
                 e.printStackTrace();
@@ -56,8 +56,8 @@ public class ChatAsync implements Listener {
         }
 
         event.setCancelled(true);
-        ChatRunnable.removeMappedPlayer(player);
+        ChatRunnable.removeMappedSender(player);
     }
 
-    public static boolean isInConfirmation(Player player) { return ChatRunnable.getMappedPlayers().contains(player); }
+    public static boolean isInConfirmation(Player player) { return ChatRunnable.getMappedSenders().contains(player); }
 }

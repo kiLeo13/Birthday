@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.boss.BarColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -23,18 +24,18 @@ public class AddBirthday implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player) && !(sender instanceof ConsoleCommandSender)) {
             sender.sendRichMessage("<red>Only players can run this command.");
             return true;
         }
 
         if (args.length != 5) {
-            player.sendRichMessage("<red>Incorrect usage!\nSee: <green>/birthdayadd <gold><<yellow>key<gold>> <gold><<yellow>displayname<gold>> <gold><<yellow>barcolor<gold>> <gold><<yellow>month<gold>> <gold><<yellow>day<gold>>");
+            sender.sendRichMessage("<red>Incorrect usage!\nSee: <green>/birthdayadd <gold><<yellow>key<gold>> <gold><<yellow>displayname<gold>> <gold><<yellow>barcolor<gold>> <gold><<yellow>month<gold>> <gold><<yellow>day<gold>>");
             return true;
         }
 
         if (!isColorFine(args[2].toUpperCase())) {
-            player.sendRichMessage("<red>BarColor input invalid.\nPossible values: " + barColorsString());
+            sender.sendRichMessage("<red>BarColor input invalid.\nPossible values: " + barColorsString());
             return true;
         }
 
@@ -46,38 +47,55 @@ public class AddBirthday implements TabExecutor {
 
         try { day = Byte.parseByte(args[4]); }
         catch (NumberFormatException e) {
-            player.sendRichMessage("<red>Day input has to be a number between 1 and 31, see console for errors.");
+            sender.sendRichMessage("<red>Day input has to be a number between 1 and 31, see console for errors.");
             e.printStackTrace();
             return true;
         }
 
         if (!Birthdays.getInstance().months().contains(month)) {
-            player.sendRichMessage("<red>Month input invalid. Please write the name of a month, don't use numbers.");
+            sender.sendRichMessage("<red>Month input invalid. Please write the name of a month, don't use numbers.");
             return true;
         }
 
         if (!Birthdays.getInstance().dayExists(day, month)) {
-            player.sendRichMessage("<red>The provided day does not exist in the given month, please, provide a valid one.");
+            sender.sendRichMessage("<red>The provided day does not exist in the given month, please, provide a valid one.");
             return true;
         }
 
-        boolean exists = Birthdays.getInstance().birthdayExists(args[0]);
+        boolean birthdayExists = Birthdays.getInstance().birthdayExists(args[0]);
 
-        if (exists) {
+        if (birthdayExists) {
             ConfigurationSection section = Birthdays.getInstance().getBirthdaysConfig().getConfigurationSection("birthdays");
 
             if (section == null) {
-                player.sendRichMessage("<red>There was a problem attempting to create a new birthday. Section 'birthdays' is null. Check <gold>birthdays.yml<red> file or delete it to a new one be generated.");
+                sender.sendRichMessage("<red>There was a problem attempting to create a new birthday. Section 'birthdays' is null. Check <gold>birthdays.yml<red> file or delete it to a new one be generated.");
                 return true;
             }
 
-            String currentCelebrantName = section.getString(key + ".name");
-            String currentCelebrantBarColor = getFormattedBarColor(section, key);
-            String currentCelebrantMonth = getFormattedMonth(section, key);
-            String currentCelebrantDay = getFormattedDay(section, key, player);
+            String currentName = section.getString(key + ".name");
+            String currentBarColor = getFormattedBarColor(section, key);
+            String currentMonth = getFormattedMonth(section, key);
+            String currentDay = getFormattedDay(section, key, sender);
 
-            player.sendRichMessage("<yellow>There is already a key with this name, would like to override it?\n\n<red>Name: <yellow>" + currentCelebrantName + "</yellow>\nBarColor: <yellow>" + currentCelebrantBarColor + "</yellow>\nDate: <yellow>" + currentCelebrantMonth + ", " + currentCelebrantDay + "</yellow>\n\nReply with: <red>YES <yellow> or <red>NO");
-            ChatRunnable.addMappingPlayer(player, args);
+            String currentRealBarColor = section.getString(key + ".barcolor");
+            byte currentRealDay = 0;
+
+            try {
+                currentRealDay = (byte) section.getInt(key + ".day");
+            } catch (NumberFormatException e) {
+                sender.sendRichMessage("<red>Something went wrong attempting to fetch the day of the player's birthday. 0 Will be displayed instead.");
+                e.printStackTrace();
+            }
+
+            if (currentName == null) currentName = "Unknown";
+
+            if (areTheSame(currentName, currentBarColor, currentMonth, currentRealDay, realName, currentRealBarColor, month, day)) {
+                sender.sendRichMessage("<red>The information you provided is already assigned to this register.");
+                return true;
+            }
+
+            sender.sendRichMessage("<yellow>There is already a key with this name, would like to override it?\n\n<red>Name: <yellow>" + currentName + "</yellow>\nBarColor: <yellow>" + currentBarColor + "</yellow>\nDate: <yellow>" + currentMonth + ", " + currentDay + "</yellow>\n\nReply with: <red>YES <yellow> or <red>NO");
+            ChatRunnable.addMappingSender(sender, args);
             return true;
         }
 
@@ -94,12 +112,13 @@ public class AddBirthday implements TabExecutor {
             else {
                 Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
-                players.forEach(player1 -> MainBirthday.getBossBar().addPlayer(player));
+                players.forEach(player -> MainBirthday.getBossBar().addPlayer(player));
             }
 
-            player.sendRichMessage("<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully scheduled <gold>" + realName + "</gold>'s birthday!</green>");
+            if (realName.endsWith("s")) sender.sendRichMessage("<gold>==================================================</gold>\n\n<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully registered <gold>" + realName + "</gold>' birthday!</green>\n\n<gold>==================================================</gold>");
+            else sender.sendRichMessage("<gold>==================================================</gold>\n\n<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully registered <gold>" + realName + "</gold>'s birthday!</green>\n\n<gold>==================================================</gold>");
         } catch (IllegalArgumentException e) {
-            player.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
+            sender.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
             e.printStackTrace();
         }
 
@@ -205,7 +224,7 @@ public class AddBirthday implements TabExecutor {
         return builder.toString();
     }
 
-    private String getFormattedDay(ConfigurationSection section, String key, Player sender) throws NumberFormatException {
+    private String getFormattedDay(ConfigurationSection section, String key, CommandSender sender) throws NumberFormatException {
         int day = 0;
         String formattedDay;
 
@@ -236,5 +255,23 @@ public class AddBirthday implements TabExecutor {
         if (rawColor.equalsIgnoreCase("YELLOW")) return "<yellow>YELLOW</yellow>";
 
         return "Unknown";
+    }
+
+    private boolean areTheSame(String currName, String currBarColor, String currMonth, byte currDay, String newName, String newBarColor, String newmonth, byte newDay) {
+        List<Boolean> finalTesting = new ArrayList<>();
+
+        if (currName.equals(newName)) finalTesting.add(true);
+
+        if (currBarColor.equals(newBarColor)) finalTesting.add(true);
+
+        if (currMonth.equalsIgnoreCase(newmonth)) finalTesting.add(true);
+
+        if (currDay == newDay) finalTesting.add(true);
+        else finalTesting.add(false);
+
+        for (boolean i : finalTesting)
+            if (!i) return false;
+
+        return true;
     }
 }

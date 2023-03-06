@@ -2,6 +2,7 @@ package cool.birthday;
 
 import cool.birthday.commands.AddBirthday;
 import cool.birthday.commands.GeneralBirthday;
+import cool.birthday.commands.GetBirthday;
 import cool.birthday.listeners.CommandProcess;
 import cool.birthday.listeners.PlayerJoin;
 import cool.birthday.runnables.ChatRunnable;
@@ -55,6 +56,9 @@ public final class Birthday extends JavaPlugin {
 
         PluginCommand birthday = this.getCommand("birthday");
         if (birthday != null) birthday.setExecutor(new GeneralBirthday());
+
+        PluginCommand birthdayGet = this.getCommand("birthdayget");
+        if (birthdayGet != null) birthdayGet.setExecutor(new GetBirthday());
     }
 
     private void registerListeners() {
