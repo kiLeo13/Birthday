@@ -44,8 +44,8 @@ public class ChatAsync implements Listener {
                 Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
                 MainBirthday.updateBossBar(birthdays);
 
-                if (realName.endsWith("s")) player.sendRichMessage("<gradient:gold:red:gold>==================================================</gradient>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]\n\n<b>|</b></dark_gray> <gold>" + realName + "</gold><yellow>' birthday has been successfully overriden!</yellow>\n\n<gradient:gold:red:gold>==================================================</gradient>");
-                else player.sendRichMessage("<gradient:gold:red:gold>==================================================</gradient>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]\n\n<b>|</b></dark_gray> <gold>" + realName + "</gold><yellow>'s birthday has been successfully overriden!</yellow>\n\n<gradient:gold:red:gold>==================================================</gradient>");
+                if (realName.endsWith("s")) player.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<b>|</b> <gold>" + realName + "</gold><yellow>' birthday has been successfully overriden!</yellow>\n\n<gold>==================================================</gold>");
+                else player.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<gray><b>|</b></gray> <gold>" + realName + "</gold><yellow>'s birthday has been successfully overriden!</yellow>\n\n<gold>==================================================</gold>");
             } catch (IllegalArgumentException e) {
                 player.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
                 e.printStackTrace();

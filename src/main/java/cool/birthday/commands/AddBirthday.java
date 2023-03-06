@@ -115,8 +115,8 @@ public class AddBirthday implements TabExecutor {
                 players.forEach(player -> MainBirthday.getBossBar().addPlayer(player));
             }
 
-            if (realName.endsWith("s")) sender.sendRichMessage("<gold>==================================================</gold>\n\n<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully registered <gold>" + realName + "</gold>' birthday!</green>\n\n<gold>==================================================</gold>");
-            else sender.sendRichMessage("<gold>==================================================</gold>\n\n<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray> <green>Successfully registered <gold>" + realName + "</gold>'s birthday!</green>\n\n<gold>==================================================</gold>");
+            if (realName.endsWith("s")) sender.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]></dark_gray>\n\n<b>|</b> <gold>" + realName + "</gold><green>' birthday has been successfully registered!</green>\n\n<gold>==================================================</gold>");
+            else sender.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<b>|</b> <gold>" + realName + "</gold><green>'s birthday has been successfully registered!</green>\n\n<gold>==================================================</gold>");
         } catch (IllegalArgumentException e) {
             sender.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
             e.printStackTrace();
