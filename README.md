@@ -1,5 +1,5 @@
 # Birthday
-A simple plugin to schedule others' birthday and be reminded of it.
+A simple plugin to schedule others' birthday and be reminded of them.
 
 <p align="center">
   <img src=https://cdn.discordapp.com/attachments/631974560605929493/1081847366912573530/image.png width = '75%'>

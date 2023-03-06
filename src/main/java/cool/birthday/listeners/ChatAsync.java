@@ -6,6 +6,7 @@ import cool.birthday.runnables.MainBirthday;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.boss.BarColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,26 +20,38 @@ public class ChatAsync implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerChat(AsyncChatEvent event) {
 
-        Player player = event.getPlayer();
-        String message = MiniMessage.miniMessage().serialize(event.originalMessage());
         String monthNow = LocalDateTime.now().getMonth().toString();
         int dayNow = LocalDateTime.now().getDayOfMonth();
         List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(monthNow, dayNow);
 
-        if (!isInConfirmation(player)) return;
+        manageCreateConfirm(event, birthdays);
+
+        manageDeleteCofirm(event, birthdays);
+    }
+
+    public static boolean isInCreateConfirmation(Player player) { return ChatRunnable.getMappedCreatingSenders().contains(player); }
+
+    public static boolean isInDeleteConfirmation(Player player) { return ChatRunnable.getMappedDeletingSenders().contains(player); }
+
+    private void manageCreateConfirm(AsyncChatEvent event, List<String> birthdays) {
+
+        Player player = event.getPlayer();
+        String message = MiniMessage.miniMessage().serialize(event.originalMessage());
+
+        if (!isInCreateConfirmation(player)) return;
 
         if (!message.equalsIgnoreCase("yes") && !message.equalsIgnoreCase("no")) {
-            ChatRunnable.removeMappedSender(player);
+            ChatRunnable.removeCreatingMappedSender(player);
             player.sendRichMessage("<red>Command canceled. Replied message did not match the expected.");
             return;
         }
 
         if (message.equalsIgnoreCase("yes")) {
-            String key = ChatRunnable.getPlayerCommandArgs(player)[0];
-            String realName = ChatRunnable.getPlayerCommandArgs(player)[1];
-            BarColor barColor = BarColor.valueOf(ChatRunnable.getPlayerCommandArgs(player)[2].toUpperCase());
-            String month = ChatRunnable.getPlayerCommandArgs(player)[3];
-            byte day = Byte.parseByte(ChatRunnable.getPlayerCommandArgs(player)[4]);
+            String key = ChatRunnable.getPlayerCreatingCommandArgs(player)[0];
+            String realName = ChatRunnable.getPlayerCreatingCommandArgs(player)[1];
+            BarColor barColor = BarColor.valueOf(ChatRunnable.getPlayerCreatingCommandArgs(player)[2].toUpperCase());
+            String month = ChatRunnable.getPlayerCreatingCommandArgs(player)[3];
+            byte day = Byte.parseByte(ChatRunnable.getPlayerCreatingCommandArgs(player)[4]);
 
             try {
                 Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
@@ -56,8 +69,45 @@ public class ChatAsync implements Listener {
         }
 
         event.setCancelled(true);
-        ChatRunnable.removeMappedSender(player);
+        ChatRunnable.removeCreatingMappedSender(player);
     }
 
-    public static boolean isInConfirmation(Player player) { return ChatRunnable.getMappedSenders().contains(player); }
+    private void manageDeleteCofirm(AsyncChatEvent event, List<String> birthdays) {
+
+        ConfigurationSection section = Birthdays.getInstance().getBirthdaysConfig().getConfigurationSection("birthdays");
+
+        Player player = event.getPlayer();
+        String message = MiniMessage.miniMessage().serialize(event.originalMessage());
+
+        if (section == null) {
+            player.sendRichMessage("<red>There was a problem attempting to remove the birthday. Section 'birthdays' is null. Check <gold>birthdays.yml<red> file or delete it to generate a new one.");
+            return;
+        }
+
+        if (!isInDeleteConfirmation(player)) return;
+
+        if (!message.equalsIgnoreCase("yes") && !message.equalsIgnoreCase("no")) {
+            player.sendRichMessage("<red>Command canceled.");
+            ChatRunnable.removeDeletingMappedSender(player);
+            return;
+        }
+
+        if (message.equalsIgnoreCase("yes")) {
+            String key = ChatRunnable.getPlayerDeletingCommandArg(player);
+            String realName = section.getString(key + ".name");
+
+            if (realName == null) realName = "Unknown";
+
+            Birthdays.getInstance().removeBirthday(key);
+            MainBirthday.updateBossBar(birthdays);
+
+            if (realName.endsWith("s")) player.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<gray><b>|</b></gray> <gold>" + realName + "'</gold><green> birthday has been successfully removed!</green>\n\n<gold>==================================================</gold>");
+            else player.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<gray><b>|</b></gray> <gold>" + realName + "'s</gold><green> birthday has been successfully removed!</green>\n\n<gold>==================================================</gold>");
+        } else {
+            player.sendRichMessage("<yellow>Okay! Birthday hasn't been removed.");
+        }
+
+        ChatRunnable.removeDeletingMappedSender(player);
+        event.setCancelled(true);
+    }
 }

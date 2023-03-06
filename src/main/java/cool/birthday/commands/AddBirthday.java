@@ -68,7 +68,7 @@ public class AddBirthday implements TabExecutor {
             ConfigurationSection section = Birthdays.getInstance().getBirthdaysConfig().getConfigurationSection("birthdays");
 
             if (section == null) {
-                sender.sendRichMessage("<red>There was a problem attempting to create a new birthday. Section 'birthdays' is null. Check <gold>birthdays.yml<red> file or delete it to a new one be generated.");
+                sender.sendRichMessage("<red>There was a problem attempting to create a new birthday. Section 'birthdays' is null. Check <gold>birthdays.yml<red> file or delete it to generate a new one.");
                 return true;
             }
 
@@ -95,7 +95,7 @@ public class AddBirthday implements TabExecutor {
             }
 
             sender.sendRichMessage("<yellow>There is already a key with this name, would like to override it?\n\n<red>Name: <yellow>" + currentName + "</yellow>\nBarColor: <yellow>" + currentBarColor + "</yellow>\nDate: <yellow>" + currentMonth + ", " + currentDay + "</yellow>\n\nReply with: <red>YES <yellow> or <red>NO");
-            ChatRunnable.addMappingSender(sender, args);
+            ChatRunnable.addCreatingMappingSender(sender, args);
             return true;
         }
 
@@ -115,8 +115,8 @@ public class AddBirthday implements TabExecutor {
                 players.forEach(player -> MainBirthday.getBossBar().addPlayer(player));
             }
 
-            if (realName.endsWith("s")) sender.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]></dark_gray>\n\n<b>|</b> <gold>" + realName + "</gold><green>' birthday has been successfully registered!</green>\n\n<gold>==================================================</gold>");
-            else sender.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<b>|</b> <gold>" + realName + "</gold><green>'s birthday has been successfully registered!</green>\n\n<gold>==================================================</gold>");
+            if (realName.endsWith("s")) sender.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]></dark_gray>\n\n<gray><b>|</b></gray> <gold>" + realName + "</gold><green>' birthday has been successfully registered!</green>\n\n<gold>==================================================</gold>");
+            else sender.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<gray><b>|</b></gray> <gold>" + realName + "</gold><green>'s birthday has been successfully registered!</green>\n\n<gold>==================================================</gold>");
         } catch (IllegalArgumentException e) {
             sender.sendRichMessage("<red>Something went wrong, are all values set properly? Check console for errors.");
             e.printStackTrace();
@@ -263,7 +263,7 @@ public class AddBirthday implements TabExecutor {
         if (currName.equals(newName)) finalTesting.add(true);
         else finalTesting.add(false);
 
-        if (currBarColor.equals(newBarColor)) finalTesting.add(true);
+        if (currBarColor.equalsIgnoreCase(newBarColor)) finalTesting.add(true);
         else finalTesting.add(false);
 
         if (currMonth.equalsIgnoreCase(newmonth)) finalTesting.add(true);

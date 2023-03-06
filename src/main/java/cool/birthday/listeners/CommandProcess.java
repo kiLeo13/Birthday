@@ -18,7 +18,7 @@ public class CommandProcess implements Listener {
 
         if (message.equalsIgnoreCase("/reload confirm")) MainBirthday.getBossBar().removeAll();
 
-        if (message.startsWith("/birthdayadd") && ChatRunnable.getMappedSenders().contains(player)) {
+        if (message.startsWith("/birthdayadd") && ChatRunnable.getMappedCreatingSenders().contains(player)) {
             player.sendRichMessage("<red>You cannot run this command right now.");
             event.setCancelled(true);
         }

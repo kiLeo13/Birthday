@@ -1,22 +1,38 @@
+# As always, this is the configuration file for this plugin.
+# There will always have an explanation to understand what the option actually does.
+
+# On running /birthdayremove should we ask you to confirm the operation?
+# Setting to false means the plugin will delete the birthday without prompting any confirmation.
+# Setting to true means the plugin will always ask you to confirm that you really want to do that.
+# REMEMBER!
+# Deleting is a process that cannot be undone. We highly don't recommend you setting this to false.
+# Default: true
+delete-confirmation: true
+
 # What message should we broadcast when someone's birthday?
 # Leaving this empty or "" means the plugin will not send anything.
-
-announcement-message: ''
+# Available placeholders:
+# <celebrants> = The name of the birthday celebrant(s) of the day.
+announcement-message: ""
 
 # What sound effect should we play when broadcasting the birthday?
 # Possible sounds reference: https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
 # Leaving this empty or "" means no sound will be played.
 # Setting this to 'default' will make the plugin to use the default one (dragon growl).
-sound-effect:
+sound-effect: default
 
 # Should we show a title to online players?
 # Leaving this empty or setting to '' means no title will be shown.
-title-shown:
+# Available placeholders:
+# <celebrants> = The name of the birthday celebrant(s) of the day.
+title-shown: ""
 
 # This option will only work if the above one is NOT null.
 # What subtitle should we show to online players?
 # Leaving this empty or setting to '' means no subtitle will be shown.
-subtitle-shown:
+# Available placeholders:
+# <celebrants> = The name of the birthday celebrant(s) of the day.
+subtitle-shown: ""
 
 # This option will be ignored if "title-shown" is null
 # What times configuration should we use for titles?
@@ -28,7 +44,7 @@ times:
   stay: 3000
   fadeOut: 500
 
-# The main announcement is when the title/subtitle, sound effect and announcement message are sent.
+# The main announcement is when the title, subtitle, sound effect and announcement message are sent.
 # When should be this announcement?
 # Keep in mind that this value does NOT affect the bossbar at the top of the screen.
 # Please use 24-hours format.
