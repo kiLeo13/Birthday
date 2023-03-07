@@ -3,6 +3,7 @@ package cool.birthday.runnables;
 import cool.birthday.Birthday;
 import cool.birthday.configuration.Birthdays;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-public class MainBirthday extends BukkitRunnable {
+public class MainBossBar extends BukkitRunnable {
     private static BossBar bossBar = null;
     private final Plugin plugin;
     private static String month;
@@ -30,8 +31,9 @@ public class MainBirthday extends BukkitRunnable {
     private static int minute;
     private static int second;
     private static int minuteOfDay;
+    private static String formattedCelebrantsName;
 
-    public MainBirthday(Plugin plugin) { this.plugin = plugin; }
+    public MainBossBar(Plugin plugin) { this.plugin = plugin; }
 
     @Override
     public void run() {
@@ -42,21 +44,24 @@ public class MainBirthday extends BukkitRunnable {
     private void runTest(String month, int day) {
         int hourAnnouncement = plugin.getConfig().getInt("main-announcement.hour");
         int minuteAnnouncement = plugin.getConfig().getInt("main-announcement.minute");
+        int secondAnnouncement = plugin.getConfig().getInt("main-announcement.second");
         List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(month, day);
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
+        setFormattedCelebrants(birthdays);
+
         players.forEach(player -> {
             if (birthdays.isEmpty()) {
-                updateBossBar(birthdays);
+                updateBossBar();
                 bossBar.removeAll();
                 return;
             }
 
             /* Call other functions if time is exactly 00:00 (12 AM) */
-            updateBossBar(birthdays);
+            updateBossBar();
             bossBar.addPlayer(player);
 
-            if (hour == hourAnnouncement && minute == minuteAnnouncement && second == 0)
+            if (hour == hourAnnouncement && minute == minuteAnnouncement && second == secondAnnouncement)
                 additionalAnnouncements(player);
         });
     }
@@ -87,7 +92,7 @@ public class MainBirthday extends BukkitRunnable {
 
         if (announcementMessage == null) announcementMessage = "";
 
-        if (!announcementMessage.equalsIgnoreCase("")) player.sendMessage(MiniMessage.miniMessage().deserialize(announcementMessage));
+        if (!announcementMessage.equalsIgnoreCase("")) player.sendMessage(MiniMessage.miniMessage().deserialize(announcementMessage, Placeholder.unparsed("celebrants", formattedCelebrantsName)));
     }
 
     private Title callTitle() {
@@ -103,10 +108,14 @@ public class MainBirthday extends BukkitRunnable {
 
         String finalSubtitle = subtitle;
 
-        return Title.title(MiniMessage.miniMessage().deserialize(title), MiniMessage.miniMessage().deserialize(finalSubtitle), Title.Times.times(Duration.ofMillis(fadeIn), Duration.ofMillis(stay), Duration.ofMillis(fadeOut)));
+        return Title.title(MiniMessage.miniMessage().deserialize(
+                title,Placeholder.unparsed("celebrants", formattedCelebrantsName)),
+                MiniMessage.miniMessage().deserialize(finalSubtitle, Placeholder.unparsed("celebrants", formattedCelebrantsName)),
+                Title.Times.times(Duration.ofMillis(fadeIn), Duration.ofMillis(stay), Duration.ofMillis(fadeOut)));
     }
 
-    public static void updateBossBar(List<String> birthdays) {
+    private static void updateBossBar() {
+        List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(month, day);
         StringBuilder builder = new StringBuilder();
         BarColor color = BarColor.valueOf(Birthday.getPlugin().getConfig().getString("barcolor-multiple-celebrants"));
         double progress = (1440 - minuteOfDay) / 1440.0;
@@ -175,5 +184,43 @@ public class MainBirthday extends BukkitRunnable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private void setFormattedCelebrants(List<String> birthdays) {
+        ConfigurationSection section = Birthdays.getInstance().getBirthdaysConfig().getConfigurationSection("birthdays");
+        StringBuilder builder = new StringBuilder();
+        String finalMessage;
+
+        if (section == null) {
+            System.out.println(ChatColor.RED + "Could not format celebrants because section 'birthdays' is null. We recommend you to delete the file " + ChatColor.GOLD + "birthdays.yml" + ChatColor.RED + " to generate a new one when the server restarts.");
+            return;
+        }
+
+        if (birthdays.isEmpty()) {
+            formattedCelebrantsName = null;
+            return;
+        }
+
+        for (String i : birthdays)
+            builder.append(section.getString(i + ".name")).append(ChatColor.DARK_GRAY).append(", ");
+
+        finalMessage = builder.toString().stripTrailing().substring(0, builder.length()-2);
+        finalMessage += ChatColor.RESET;
+
+        formattedCelebrantsName = finalMessage;
+    }
+
+    public static void smartBarSetVisibility() {
+        updateBossBar();
+
+        List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(month, day);
+        Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+
+        if (birthdays.isEmpty()) {
+            bossBar.removeAll();
+            return;
+        }
+
+        players.forEach(player -> bossBar.addPlayer(player));
     }
 }

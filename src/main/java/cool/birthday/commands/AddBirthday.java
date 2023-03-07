@@ -2,7 +2,7 @@ package cool.birthday.commands;
 
 import cool.birthday.configuration.Birthdays;
 import cool.birthday.runnables.ChatRunnable;
-import cool.birthday.runnables.MainBirthday;
+import cool.birthday.runnables.MainBossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.boss.BarColor;
@@ -15,8 +15,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class AddBirthday implements TabExecutor {
@@ -102,18 +104,7 @@ public class AddBirthday implements TabExecutor {
         try {
             Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
 
-            String monthNow = LocalDateTime.now().getMonth().toString();
-            int dayNow = LocalDateTime.now().getDayOfMonth();
-            List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(monthNow, dayNow);
-
-            MainBirthday.updateBossBar(birthdays);
-
-            if (birthdays.isEmpty()) MainBirthday.getBossBar().removeAll();
-            else {
-                Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-
-                players.forEach(player -> MainBirthday.getBossBar().addPlayer(player));
-            }
+            MainBossBar.smartBarSetVisibility();
 
             if (realName.endsWith("s")) sender.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]></dark_gray>\n\n<gray><b>|</b></gray> <gold>" + realName + "</gold><green>' birthday has been successfully registered!</green>\n\n<gold>==================================================</gold>");
             else sender.sendRichMessage("<gold>==================================================</gold>\n<gray><b>╰</b></gray><dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<gray><b>|</b></gray> <gold>" + realName + "</gold><green>'s birthday has been successfully registered!</green>\n\n<gold>==================================================</gold>");

@@ -2,7 +2,7 @@ package cool.birthday.commands;
 
 import cool.birthday.Birthday;
 import cool.birthday.configuration.Birthdays;
-import cool.birthday.runnables.MainBirthday;
+import cool.birthday.runnables.MainBossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -51,14 +51,7 @@ public class GeneralBirthday implements TabExecutor {
         int dayNow = LocalDateTime.now().getDayOfMonth();
         List<String> birthdays = Birthdays.getInstance().getBirthdaysToday(monthNow, dayNow);
 
-        MainBirthday.updateBossBar(birthdays);
-
-        if (birthdays.isEmpty()) MainBirthday.getBossBar().removeAll();
-        else {
-            Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-
-            players.forEach(player -> MainBirthday.getBossBar().addPlayer(player));
-        }
+        MainBossBar.smartBarSetVisibility();
 
         return true;
     }

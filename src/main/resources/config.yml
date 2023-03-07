@@ -37,8 +37,7 @@ subtitle-shown: ""
 # This option will be ignored if "title-shown" is null
 # What times configuration should we use for titles?
 # Leaving this empty will make every option be 1 second.
-# These are the pattern used in titles in milliseconds:
-# To find the value in milliseconds just do "<value in seconds> * 1000".
+# Times used for titles in MILLISECONDS (1000 = 1 second):
 times:
   fadeIn: 500
   stay: 3000
@@ -51,6 +50,7 @@ times:
 main-announcement:
   hour: 00
   minute: 00
+  second: 00
 
 # Every player can setup their own color, but a BossBar cannot have multiple colors.
 # So what should be the BossBar color if there are more than one Birthday Celebrant?

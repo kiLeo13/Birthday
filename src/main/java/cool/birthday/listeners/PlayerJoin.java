@@ -1,6 +1,6 @@
 package cool.birthday.listeners;
 
-import cool.birthday.runnables.MainBirthday;
+import cool.birthday.runnables.MainBossBar;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,8 +15,8 @@ public class PlayerJoin implements Listener {
 
         Player player = event.getPlayer();
 
-        MainBirthday.updateTime();
-        BossBar bossBar = MainBirthday.getBossBar();
+        MainBossBar.updateTime();
+        BossBar bossBar = MainBossBar.getBossBar();
 
         bossBar.addPlayer(player);
     }

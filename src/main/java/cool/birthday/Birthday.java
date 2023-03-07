@@ -6,7 +6,7 @@ import cool.birthday.commands.GetBirthday;
 import cool.birthday.listeners.CommandProcess;
 import cool.birthday.listeners.PlayerJoin;
 import cool.birthday.runnables.ChatRunnable;
-import cool.birthday.runnables.MainBirthday;
+import cool.birthday.runnables.MainBossBar;
 import cool.birthday.commands.RemoveBirthday;
 import cool.birthday.listeners.ChatAsync;
 import org.bukkit.ChatColor;
@@ -29,7 +29,7 @@ public final class Birthday extends JavaPlugin {
         saveDefaultConfig();
 
         // Create BossBar
-        MainBirthday.createBossBar();
+        MainBossBar.createBossBar();
     }
 
     @Override
@@ -40,7 +40,7 @@ public final class Birthday extends JavaPlugin {
     public static Plugin getPlugin() { return plugin; }
 
     private void startRunnable() {
-        MainBirthday test = new MainBirthday(this);
+        MainBossBar test = new MainBossBar(this);
         test.runTaskTimer(this, 0, 20);
 
         ChatRunnable chat = new ChatRunnable();

@@ -87,7 +87,7 @@ public class ChatRunnable extends BukkitRunnable {
     }
 
     public static void addDeletingMappingSender(CommandSender sender, String arg) {
-        confirmCreatingTime.put(sender, 0);
+        confirmDeletingTime.put(sender, 0);
         playerDeletingArg.put(sender, arg);
     }
 

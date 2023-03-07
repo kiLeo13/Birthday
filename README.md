@@ -13,4 +13,4 @@ A simple plugin to schedule others' birthday and be reminded of them.
 
 > **Warning**
 >
-> This plugin is heavily in development stage. If you still want to compile and use it, this an advice not to do that.
+> This plugin is still heavily in development stage. If you still want to compile and use it you are being advised not to do that.
