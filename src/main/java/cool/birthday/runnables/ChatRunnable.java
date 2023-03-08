@@ -8,9 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ChatRunnable extends BukkitRunnable {
+    // Overriding Confirmations
     private static final HashMap<CommandSender, Integer> confirmCreatingTime = new HashMap<>();
-    private static final HashMap<CommandSender, Integer> confirmDeletingTime = new HashMap<>();
     private static final HashMap<CommandSender, String[]> playerCreatingArgs = new HashMap<>();
+
+    // Deleting Confirmations
+    private static final HashMap<CommandSender, Integer> confirmDeletingTime = new HashMap<>();
     private static final HashMap<CommandSender, String> playerDeletingArg = new HashMap<>();
 
     @Override
@@ -19,8 +22,10 @@ public class ChatRunnable extends BukkitRunnable {
         if (!confirmDeletingTime.isEmpty()) addDeletingOneSec();
 
         getMappedCreatingSenders();
+        getMappedDeletingSenders();
     }
 
+    // Timers
     private void addCreatingOneSec() {
         confirmCreatingTime.forEach((key, value) -> confirmCreatingTime.put(key, value + 1));
     }
@@ -29,6 +34,7 @@ public class ChatRunnable extends BukkitRunnable {
         confirmDeletingTime.forEach((key, value) -> confirmDeletingTime.put(key, value + 1));
     }
 
+    // Input getters
     public static List<CommandSender> getMappedCreatingSenders() {
         List<CommandSender> keys = new ArrayList<>();
         List<CommandSender> confirmTimeToRemove = new ArrayList<>();
@@ -71,6 +77,7 @@ public class ChatRunnable extends BukkitRunnable {
         return keys;
     }
 
+    // Removing inputs
     public static void removeCreatingMappedSender(CommandSender sender) {
         confirmCreatingTime.remove(sender);
         playerDeletingArg.remove(sender);

@@ -8,7 +8,7 @@ commands:
   birthdayadd:
     description: A command to add someone's birthday.
     permission: birthday.add
-    usage: /<command> <key> <displayname> <barcolor> <month> <day>
+    usage: /<command> <key> <realname> <barcolor> <month> <day> [yearborn]
   birthdayremove:
     description: A command to remove someone's birthday.
     permission: birthday.remove

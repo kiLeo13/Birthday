@@ -13,7 +13,9 @@ delete-confirmation: true
 # Leaving this empty or "" means the plugin will not send anything.
 # Available placeholders:
 # <celebrants> = The name of the birthday celebrant(s) of the day.
-announcement-message: ""
+# <previousage> = The PREVIOUS age of the person.
+# <age> = The age the person is turning (in this case, the current one).
+announcement-message: "Congratulations previous <previousage> years old <celebrants> for turning <age>!"
 
 # What sound effect should we play when broadcasting the birthday?
 # Possible sounds reference: https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
@@ -25,6 +27,8 @@ sound-effect: default
 # Leaving this empty or setting to '' means no title will be shown.
 # Available placeholders:
 # <celebrants> = The name of the birthday celebrant(s) of the day.
+# <previousage> = The PREVIOUS age of the person.
+# <age> = The age the person is turning (in this case, the current one).
 title-shown: ""
 
 # This option will only work if the above one is NOT null.
@@ -32,6 +36,8 @@ title-shown: ""
 # Leaving this empty or setting to '' means no subtitle will be shown.
 # Available placeholders:
 # <celebrants> = The name of the birthday celebrant(s) of the day.
+# <previousage> = The PREVIOUS age of the person.
+# <age> = The age the person is turning (in this case, the current one).
 subtitle-shown: ""
 
 # This option will be ignored if "title-shown" is null

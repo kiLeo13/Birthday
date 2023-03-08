@@ -44,9 +44,10 @@ public class ChatAsync implements Listener {
             BarColor barColor = BarColor.valueOf(ChatRunnable.getPlayerCreatingCommandArgs(player)[2].toUpperCase());
             String month = ChatRunnable.getPlayerCreatingCommandArgs(player)[3];
             byte day = Byte.parseByte(ChatRunnable.getPlayerCreatingCommandArgs(player)[4]);
+            long age = Long.parseLong(ChatRunnable.getPlayerCreatingCommandArgs(player)[5]);
 
             try {
-                Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day);
+                Birthdays.getInstance().addBirthDay(key, realName, barColor, month, day, age);
 
                 if (realName.endsWith("s")) player.sendRichMessage("\n<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<b>|</b> <gold>" + realName + "</gold><yellow>' birthday has been successfully overridden!</yellow>\n");
                 else player.sendRichMessage("\n<dark_gray>[<light_purple>" + key + "</light_purple>]</dark_gray>\n\n<gray><b>|</b></gray> <gold>" + realName + "</gold><yellow>'s birthday has been successfully overridden!</yellow>\n");
@@ -56,7 +57,7 @@ public class ChatAsync implements Listener {
             }
 
         } else {
-            player.sendRichMessage("\n<gray><b>|</b></gray> <yellow>Okay! Birthday hasn't been added or overridden.\n");
+            player.sendRichMessage("\n<gray><b>|</b></gray> <yellow>Okay! Birthday hasn't been overridden.\n");
         }
 
         MainBossBar.smartBarSetVisibility();

@@ -43,7 +43,7 @@ public class Birthdays {
         }
     }
 
-    public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day) throws IllegalArgumentException {
+    public void addBirthDay(String key, String realName, BarColor barcolor, String month, byte day, long yearBorn) throws IllegalArgumentException {
         if (!months().contains(month.toLowerCase())) throw new IllegalArgumentException("Invalid month input, did you type the name of the month correctly with no numbers?");
         if (!dayExists(day, month.toLowerCase())) throw new IllegalArgumentException("Invalid day input, does the month have the day you provided?");
 
@@ -53,6 +53,7 @@ public class Birthdays {
 
         section.set(key + ".name", realName);
         section.set(key + ".barcolor", barcolor.toString());
+        section.set(key + ".year", yearBorn);
         section.set(key + ".month", month);
         section.set(key + ".day", day);
 
